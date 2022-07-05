@@ -210,13 +210,20 @@ PY_EXTMOD_O_BASENAME = \
 	extmod/utime_mphal.o \
 	shared/libc/abort_.o \
 	shared/libc/printf.o \
+	
+PY_EXTMOD_O_CRYPTO = \
+	extmod/modtrezorconfig/modtrezorconfig.o \
+	extmod/modtrezorcrypto/modtrezorcrypto.o \
+	extmod/modtrezorutils/modtrezorutils.o \
+	extmod/modtrezorcrypto/crc.o \
 
 # prepend the build destination prefix to the py object files
 PY_CORE_O = $(addprefix $(BUILD)/, $(PY_CORE_O_BASENAME))
 PY_EXTMOD_O = $(addprefix $(BUILD)/, $(PY_EXTMOD_O_BASENAME))
+PY_EXTMOD_CRYPTO_O = $(addprefix $(BUILD)/, $(PY_EXTMOD_O_CRYPTO))
 
 # this is a convenience variable for ports that want core, extmod and frozen code
-PY_O = $(PY_CORE_O) $(PY_EXTMOD_O)
+PY_O = $(PY_CORE_O) $(PY_EXTMOD_O) $(PY_EXTMOD_CRYPTO_O)
 
 # object file for frozen code specified via a manifest
 ifneq ($(FROZEN_MANIFEST),)
@@ -226,7 +233,7 @@ endif
 # Sources that may contain qstrings
 SRC_QSTR_IGNORE = py/nlr%
 SRC_QSTR_EMITNATIVE = py/emitn%
-SRC_QSTR += $(SRC_MOD) $(filter-out $(SRC_QSTR_IGNORE),$(PY_CORE_O_BASENAME:.o=.c)) $(PY_EXTMOD_O_BASENAME:.o=.c)
+SRC_QSTR += $(SRC_MOD) $(filter-out $(SRC_QSTR_IGNORE),$(PY_CORE_O_BASENAME:.o=.c)) $(PY_EXTMOD_O_BASENAME:.o=.c) $(PY_EXTMOD_O_CRYPTO:.o=.c)
 # Sources that only hold QSTRs after pre-processing.
 SRC_QSTR_PREPROCESSOR = $(addprefix $(TOP)/, $(filter $(SRC_QSTR_EMITNATIVE),$(PY_CORE_O_BASENAME:.o=.c)))
 

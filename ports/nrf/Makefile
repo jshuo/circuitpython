@@ -73,6 +73,7 @@ INC += -I$(BUILD)
 INC += -I$(BUILD)/genhdr
 INC += -I./../../lib/cmsis/inc
 INC += -I./boards/$(BOARD)
+INC += -I./../../lib/libcrypto
 INC += -isystem ./nrfx
 INC += -isystem ./nrfx/hal
 INC += -isystem ./nrfx/mdk
@@ -83,6 +84,8 @@ INC += -I./peripherals
 INC += -I../../lib/mp-readline
 INC += -I../../lib/tinyusb/src
 INC += -I../../supervisor/shared/usb
+INC += -I./util
+INC += -I./crypto/backend/cc310
 
 #Debugging/Optimization
 ifeq ($(DEBUG), 1)
@@ -100,7 +103,7 @@ endif
 # option to override compiler optimization level, set in boards/$(BOARD)/mpconfigboard.mk
 CFLAGS += $(OPTIMIZATION_FLAGS)
 
-CFLAGS += $(INC) -Wall -Werror -std=gnu11 -nostdlib -fshort-enums $(BASE_CFLAGS) $(CFLAGS_MOD) $(COPT) -Werror=missing-prototypes
+CFLAGS += $(INC) -Wall -std=gnu11 -nostdlib -fshort-enums $(BASE_CFLAGS) $(CFLAGS_MOD) $(COPT) 
 
 # Nordic Softdevice SDK header files contains inline assembler that has
 # broken constraints. As a result the IPA-modref pass, introduced in gcc-11,
@@ -131,10 +134,54 @@ CFLAGS += \
 # TODO: check this
 CFLAGS += -D__START=main
 
+CFLAGS += -DUSE_CARDANO=1
+CFLAGS += -DUSE_ETHEREUM=1
+
 LDFLAGS = $(CFLAGS) -nostartfiles -Wl,-nostdlib -Wl,-z,max-page-size=0x1000 -Wl,-T,$(GENERATED_LD_FILE) -Wl,-Map=$@.map -Wl,-cref -Wl,-gc-sections -specs=nano.specs
+# LIBS := -L ../../../modules/cc310/ -lnrf_cc310_0.9.13-no-interrupts -lgcc -lc
+# LIBS := -L ../../../modules/cc310/ -lmbedtls  -lgcc -lc
+
 LIBS := -lgcc -lc
 
 LDFLAGS += -mthumb -mcpu=cortex-m4
+	SRC_LIB += $(addprefix lib/,\
+		libcrypto/address.c \
+		libcrypto/aes/aescrypt.c \
+		libcrypto/aes/aeskey.c \
+		libcrypto/aes/aes_modes.c \
+		libcrypto/aes/aestab.c \
+		libcrypto/base58.c \
+		libcrypto/base32.c \
+		libcrypto/bignum.c \
+		libcrypto/bip32.c \
+		libcrypto/bip39.c \
+		libcrypto/blake256.c \
+		libcrypto/blake2b.c \
+		libcrypto/curves.c \
+		libcrypto/ecdsa.c \
+		libcrypto/ed25519-donna/curve25519-donna-32bit.c \
+		libcrypto/ed25519-donna/curve25519-donna-helpers.c \
+		libcrypto/ed25519-donna/curve25519-donna-scalarmult-base.c \
+		libcrypto/ed25519-donna/ed25519.c \
+		libcrypto/ed25519-donna/ed25519-donna-32bit-tables.c \
+		libcrypto/ed25519-donna/ed25519-donna-basepoint-table.c \
+		libcrypto/ed25519-donna/ed25519-donna-impl-base.c \
+		libcrypto/ed25519-donna/ed25519-keccak.c \
+		libcrypto/ed25519-donna/ed25519-sha3.c \
+		libcrypto/ed25519-donna/modm-donna-32bit.c \
+		libcrypto/hasher.c \
+		libcrypto/hmac.c \
+		libcrypto/memzero.c \
+		libcrypto/pbkdf2.c \
+		libcrypto/rand.c \
+		libcrypto/ripemd160.c \
+		libcrypto/secp256k1.c \
+		libcrypto/sha2.c \
+		libcrypto/sha3.c \
+		libcrypto/rfc6979.c \
+		libcrypto/hmac_drbg.c \
+		libcrypto/slip39.c \
+		)
 
 # Use toolchain libm if we're not using our own.
 ifndef INTERNAL_LIBM
@@ -220,10 +267,12 @@ OBJ += $(addprefix $(BUILD)/, $(SRC_NRFX:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(SRC_COMMON_HAL_SHARED_MODULE_EXPANDED:.c=.o))
 ifeq ($(INTERNAL_LIBM),1)
 OBJ += $(addprefix $(BUILD)/, $(SRC_LIBM:.c=.o))
+
 endif
 OBJ += $(addprefix $(BUILD)/, $(SRC_CIRCUITPY_COMMON:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(SRC_S:.s=.o))
 OBJ += $(addprefix $(BUILD)/, $(SRC_MOD:.c=.o))
+OBJ += $(addprefix $(BUILD)/, $(SRC_LIB:.c=.o))
 
 # nrfx uses undefined preprocessor variables quite casually, so we can't do
 # warning checks for these.  Happily, we've confined the offenders to the NRFX

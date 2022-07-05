@@ -205,6 +205,11 @@
 #endif
 
 
+#define MICROPY_PY_TREZORCRYPTO     (1)
+#define MICROPY_PY_TREZORUTILS      (1)
+#define MICROPY_PY_TREZORPROTO      (1)
+// #define MICROPY_PY_TREZORCONFIG     (1)
+
 #define MICROPY_PORT_ROOT_POINTERS                              \
     CIRCUITPY_COMMON_ROOT_POINTERS                              \
     uint16_t *pixels_pattern_heap;                              \

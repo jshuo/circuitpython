@@ -34,7 +34,6 @@ BASE_CFLAGS = \
 	-Wimplicit-fallthrough=2 \
 	-Wno-endif-labels \
 	-Wstrict-prototypes \
-	-Werror-implicit-function-declaration \
 	-Wfloat-equal \
 	-Wundef \
 	-Wshadow \
