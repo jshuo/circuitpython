@@ -21,7 +21,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-static const char* const __attribute__((section (".mySection")))  wordlist[] = {
+static const char* const  wordlist[] = {
     "abandon",  "ability",  "able",     "about",    "above",    "absent",
     "absorb",   "abstract", "absurd",   "abuse",    "access",   "accident",
     "account",  "accuse",   "achieve",  "acid",     "acoustic", "acquire",

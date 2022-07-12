@@ -81,23 +81,9 @@ STATIC mp_obj_t mod_trezorcrypto_ed25519_sign(size_t n_args,
   mp_buffer_info_t hash_func = {0};
   vstr_t sig = {0};
   vstr_init_len(&sig, sizeof(ed25519_signature));
-
-  if (n_args == 3) {
-    mp_get_buffer_raise(args[2], &hash_func, MP_BUFFER_READ);
-    // if hash_func == 'keccak':
-    if (memcmp(hash_func.buf, "keccak", sizeof("keccak")) == 0) {
-      ed25519_publickey_keccak(*(const ed25519_secret_key *)sk.buf, pk);
-      ed25519_sign_keccak(msg.buf, msg.len, *(const ed25519_secret_key *)sk.buf,
-                          pk, *(ed25519_signature *)sig.buf);
-    } else {
-      vstr_clear(&sig);
-      mp_raise_ValueError("Unknown hash function");
-    }
-  } else {
-    ed25519_publickey(*(const ed25519_secret_key *)sk.buf, pk);
-    ed25519_sign(msg.buf, msg.len, *(const ed25519_secret_key *)sk.buf, pk,
-                 *(ed25519_signature *)sig.buf);
-  }
+  ed25519_publickey(*(const ed25519_secret_key *)sk.buf, pk);
+  ed25519_sign(msg.buf, msg.len, *(const ed25519_secret_key *)sk.buf, pk,
+               *(ed25519_signature *)sig.buf);
 
   return mp_obj_new_str_from_vstr(&mp_type_bytes, &sig);
 }
@@ -298,18 +284,18 @@ STATIC const mp_rom_map_elem_t mod_trezorcrypto_ed25519_globals_table[] = {
     {MP_ROM_QSTR(MP_QSTR_publickey),
      MP_ROM_PTR(&mod_trezorcrypto_ed25519_publickey_obj)},
     {MP_ROM_QSTR(MP_QSTR_sign), MP_ROM_PTR(&mod_trezorcrypto_ed25519_sign_obj)},
-#if !BITCOIN_ONLY
-    {MP_ROM_QSTR(MP_QSTR_sign_ext),
-     MP_ROM_PTR(&mod_trezorcrypto_ed25519_sign_ext_obj)},
-#endif
-    {MP_ROM_QSTR(MP_QSTR_verify),
-     MP_ROM_PTR(&mod_trezorcrypto_ed25519_verify_obj)},
-    {MP_ROM_QSTR(MP_QSTR_cosi_combine_publickeys),
-     MP_ROM_PTR(&mod_trezorcrypto_ed25519_cosi_combine_publickeys_obj)},
-    {MP_ROM_QSTR(MP_QSTR_cosi_combine_signatures),
-     MP_ROM_PTR(&mod_trezorcrypto_ed25519_cosi_combine_signatures_obj)},
-    {MP_ROM_QSTR(MP_QSTR_cosi_sign),
-     MP_ROM_PTR(&mod_trezorcrypto_ed25519_cosi_sign_obj)},
+// #if !BITCOIN_ONLY
+//     {MP_ROM_QSTR(MP_QSTR_sign_ext),
+//      MP_ROM_PTR(&mod_trezorcrypto_ed25519_sign_ext_obj)},
+// #endif
+//     {MP_ROM_QSTR(MP_QSTR_verify),
+//      MP_ROM_PTR(&mod_trezorcrypto_ed25519_verify_obj)},
+//     {MP_ROM_QSTR(MP_QSTR_cosi_combine_publickeys),
+//      MP_ROM_PTR(&mod_trezorcrypto_ed25519_cosi_combine_publickeys_obj)},
+//     {MP_ROM_QSTR(MP_QSTR_cosi_combine_signatures),
+//      MP_ROM_PTR(&mod_trezorcrypto_ed25519_cosi_combine_signatures_obj)},
+//     {MP_ROM_QSTR(MP_QSTR_cosi_sign),
+//      MP_ROM_PTR(&mod_trezorcrypto_ed25519_cosi_sign_obj)},
 };
 STATIC MP_DEFINE_CONST_DICT(mod_trezorcrypto_ed25519_globals,
                             mod_trezorcrypto_ed25519_globals_table);

@@ -139,6 +139,7 @@ CFLAGS += -DUSE_ETHEREUM=1
 
 LDFLAGS = $(CFLAGS) -nostartfiles -Wl,-nostdlib -Wl,-z,max-page-size=0x1000 -Wl,-T,$(GENERATED_LD_FILE) -Wl,-Map=$@.map -Wl,-cref -Wl,-gc-sections -specs=nano.specs
 # LIBS := -L ../../../modules/cc310/ -lnrf_cc310_0.9.13-no-interrupts -lgcc -lc
+# LIBS := -L ../../../modules/cc310/ -lnrf_cc310_0.9.12 -lgcc -lc
 # LIBS := -L ../../../modules/cc310/ -lmbedtls  -lgcc -lc
 
 LIBS := -lgcc -lc
