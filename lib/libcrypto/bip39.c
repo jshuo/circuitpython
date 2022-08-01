@@ -58,7 +58,6 @@ const char *mnemonic_generate(int strength) {
 }
 
 static CONFIDENTIAL char mnemo[24 * 10];
-void *  SEEDADDR  = (void *) 0xD0000;
 
 const char *mnemonic_from_data(const uint8_t *data, int len) {
   if (len % 4 || len < 16 || len > 32) {
@@ -74,7 +73,7 @@ const char *mnemonic_from_data(const uint8_t *data, int len) {
   memcpy(bits, data, len);
 
   int mlen = len * 3 / 4;
-  char word[10]; 
+
   int i = 0, j = 0, idx = 0;
   char *p = mnemo;
   for (i = 0; i < mlen; i++) {
@@ -83,8 +82,8 @@ const char *mnemonic_from_data(const uint8_t *data, int len) {
       idx <<= 1;
       idx += (bits[(i * 11 + j) / 8] & (1 << (7 - ((i * 11 + j) % 8)))) > 0;
     }
-    strcpy(p, (char *) (SEEDADDR+(10*idx)));
-    p += strlen((char *) (SEEDADDR+(10*idx)));
+    strcpy(p, wordlist[idx]);
+    p += strlen(wordlist[idx]);
     *p = (i < mlen - 1) ? ' ' : 0;
     p++;
   }
@@ -255,11 +254,11 @@ int mnemonic_find_word(const char *word) {
 const char *mnemonic_complete_word(const char *prefix, int len) {
   // we need to perform linear search,
   // because we want to return the first match
-  // for (const char *const *w = wordlist; *w != 0; w++) {
-  //   if (strncmp(*w, prefix, len) == 0) {
-  //     return *w;
-  //   }
-  // }
+  for (const char *const *w = wordlist; *w != 0; w++) {
+    if (strncmp(*w, prefix, len) == 0) {
+      return *w;
+    }
+  }
   return NULL;
 }
 

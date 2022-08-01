@@ -33,14 +33,14 @@
 // #include "modtrezorcrypto-blake2s.h"
 // #include "modtrezorcrypto-chacha20poly1305.h"
 #include "modtrezorcrypto-crc.h"
-#include "modtrezorcrypto-curve25519.h"
-#include "modtrezorcrypto-ed25519.h"
+// #include "modtrezorcrypto-curve25519.h"
+// #include "modtrezorcrypto-ed25519.h"
 // #include "modtrezorcrypto-groestl.h"
-// #include "modtrezorcrypto-hmac.h"
-// #include "modtrezorcrypto-nist256p1.h"
-// #include "modtrezorcrypto-pbkdf2.h"
-// #include "modtrezorcrypto-random.h"
-// #include "modtrezorcrypto-ripemd160.h"
+#include "modtrezorcrypto-hmac.h"
+#include "modtrezorcrypto-nist256p1.h"
+#include "modtrezorcrypto-pbkdf2.h"
+#include "modtrezorcrypto-random.h"
+#include "modtrezorcrypto-ripemd160.h"
 #include "modtrezorcrypto-secp256k1.h"
 #ifdef SECP256K1_BUILD
 // #include "modtrezorcrypto-secp256k1_zkp.h"
@@ -67,22 +67,22 @@ STATIC const mp_rom_map_elem_t mp_module_trezorcrypto_globals_table[] = {
     // {MP_ROM_QSTR(MP_QSTR_blake2s), MP_ROM_PTR(&mod_trezorcrypto_Blake2s_type)},
     {MP_ROM_QSTR(MP_QSTR_crc), MP_ROM_PTR(&mod_trezorcrypto_crc_module)},
     // {MP_ROM_QSTR(MP_QSTR_curve25519),
-    //  MP_ROM_PTR(&mod_trezorcrypto_curve25519_module)},
-    {MP_ROM_QSTR(MP_QSTR_ed25519),
-     MP_ROM_PTR(&mod_trezorcrypto_ed25519_module)},
+    // //  MP_ROM_PTR(&mod_trezorcrypto_curve25519_module)},
+    // {MP_ROM_QSTR(MP_QSTR_ed25519),
+    //  MP_ROM_PTR(&mod_trezorcrypto_ed25519_module)},
 #if !BITCOIN_ONLY
     // {MP_ROM_QSTR(MP_QSTR_monero), MP_ROM_PTR(&mod_trezorcrypto_monero_module)},
 #endif
-    // {MP_ROM_QSTR(MP_QSTR_nist256p1),
-    //  MP_ROM_PTR(&mod_trezorcrypto_nist256p1_module)},
-    // {MP_ROM_QSTR(MP_QSTR_hmac), MP_ROM_PTR(&mod_trezorcrypto_Hmac_type)},
+    {MP_ROM_QSTR(MP_QSTR_nist256p1),
+     MP_ROM_PTR(&mod_trezorcrypto_nist256p1_module)},
+    {MP_ROM_QSTR(MP_QSTR_hmac), MP_ROM_PTR(&mod_trezorcrypto_Hmac_type)},
 #if !BITCOIN_ONLY
     // {MP_ROM_QSTR(MP_QSTR_nem), MP_ROM_PTR(&mod_trezorcrypto_nem_module)},
 #endif
-    // {MP_ROM_QSTR(MP_QSTR_pbkdf2), MP_ROM_PTR(&mod_trezorcrypto_Pbkdf2_type)},
-    // {MP_ROM_QSTR(MP_QSTR_random), MP_ROM_PTR(&mod_trezorcrypto_random_module)},
-    // {MP_ROM_QSTR(MP_QSTR_ripemd160),
-    //  MP_ROM_PTR(&mod_trezorcrypto_Ripemd160_type)},
+    {MP_ROM_QSTR(MP_QSTR_pbkdf2), MP_ROM_PTR(&mod_trezorcrypto_Pbkdf2_type)},
+    {MP_ROM_QSTR(MP_QSTR_random), MP_ROM_PTR(&mod_trezorcrypto_random_module)},
+    {MP_ROM_QSTR(MP_QSTR_ripemd160),
+     MP_ROM_PTR(&mod_trezorcrypto_Ripemd160_type)},
     {MP_ROM_QSTR(MP_QSTR_secp256k1),
      MP_ROM_PTR(&mod_trezorcrypto_secp256k1_module)},
 #ifdef SECP256K1_BUILD
@@ -90,12 +90,12 @@ STATIC const mp_rom_map_elem_t mp_module_trezorcrypto_globals_table[] = {
     //  MP_ROM_PTR(&mod_trezorcrypto_secp256k1_zkp_module)},
 #endif
     // {MP_ROM_QSTR(MP_QSTR_sha1), MP_ROM_PTR(&mod_trezorcrypto_Sha1_type)},
-    // {MP_ROM_QSTR(MP_QSTR_sha256), MP_ROM_PTR(&mod_trezorcrypto_Sha256_type)},
+    {MP_ROM_QSTR(MP_QSTR_sha256), MP_ROM_PTR(&mod_trezorcrypto_Sha256_type)},
     // {MP_ROM_QSTR(MP_QSTR_sha512), MP_ROM_PTR(&mod_trezorcrypto_Sha512_type)},
     {MP_ROM_QSTR(MP_QSTR_sha3_256),
      MP_ROM_PTR(&mod_trezorcrypto_Sha3_256_type)},
-    // {MP_ROM_QSTR(MP_QSTR_sha3_512),
-    //  MP_ROM_PTR(&mod_trezorcrypto_Sha3_512_type)},
+    {MP_ROM_QSTR(MP_QSTR_sha3_512),
+     MP_ROM_PTR(&mod_trezorcrypto_Sha3_512_type)},
     // {MP_ROM_QSTR(MP_QSTR_shamir), MP_ROM_PTR(&mod_trezorcrypto_shamir_module)},
     // {MP_ROM_QSTR(MP_QSTR_slip39), MP_ROM_PTR(&mod_trezorcrypto_slip39_module)},
 };

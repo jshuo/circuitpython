@@ -139,10 +139,10 @@ CFLAGS += -DUSE_ETHEREUM=1
 
 LDFLAGS = $(CFLAGS) -nostartfiles -Wl,-nostdlib -Wl,-z,max-page-size=0x1000 -Wl,-T,$(GENERATED_LD_FILE) -Wl,-Map=$@.map -Wl,-cref -Wl,-gc-sections -specs=nano.specs
 # LIBS := -L ../../../modules/cc310/ -lnrf_cc310_0.9.13-no-interrupts -lgcc -lc
-# LIBS := -L ../../../modules/cc310/ -lnrf_cc310_0.9.12 -lgcc -lc
+LIBS := -L ../../../modules/cc310/ -lnrf_cc310_0.9.12 -lgcc -lc
 # LIBS := -L ../../../modules/cc310/ -lmbedtls  -lgcc -lc
 
-LIBS := -lgcc -lc
+# LIBS := -lgcc -lc
 
 LDFLAGS += -mthumb -mcpu=cortex-m4
 	SRC_LIB += $(addprefix lib/,\
@@ -177,6 +177,7 @@ LDFLAGS += -mthumb -mcpu=cortex-m4
 		libcrypto/rand.c \
 		libcrypto/ripemd160.c \
 		libcrypto/secp256k1.c \
+		libcrypto/nist256p1.c \
 		libcrypto/sha2.c \
 		libcrypto/sha3.c \
 		libcrypto/rfc6979.c \
