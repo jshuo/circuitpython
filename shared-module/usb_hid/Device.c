@@ -80,6 +80,53 @@ const usb_hid_device_obj_t usb_hid_device_fido_obj = {
     },
 };
 
+
+static const uint8_t webhid_report_descriptor[] = {
+    0x06, 0xff, 0xa0,
+    0x09, 0x01,
+    0xA1, 0x01,       // Collection (Application)
+    0x85, 0x01,       //   Report ID (1)
+    0x09, 0x20,       //   USAGE (Input Report Data)
+    0x15, 0x00,       // LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00, // LOGICAL_MAXIMUM (255)
+    0x75, 0x08,       // REPORT_SIZE (8)
+    0x95, 64,         //  REPORT_COUNT (64)
+    0x81, 0x02,       // INPUT (Data,Var,Abs)
+    0x09, 0x21,       // USAGE(Output Report Data)
+    0x15, 0x00,       //  LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00, //  LOGICAL_MAXIMUM (255)
+    0x75, 0x08,       // REPORT_SIZE (8)
+    0x95, 64,         // REPORT_COUNT (64)
+    0x91, 0x02,       // OUTPUT (Data,Var,Abs)
+    0xc0              // END_COLLECTION
+};
+
+static uint8_t webhid_report_buffer[64];
+static uint8_t webhid_out_report_buffer[64];
+
+const usb_hid_device_obj_t usb_hid_device_webhid_obj = {
+    .base = {
+        .type = &usb_hid_device_type,
+    },
+    .report_descriptor = webhid_report_descriptor,
+    .report_descriptor_length = sizeof(webhid_report_descriptor),
+    .in_report_buffers = {webhid_report_buffer},
+    .out_report_buffers = {webhid_out_report_buffer},
+    .usage_page = 0xffa0,
+    .usage = 0x01,
+    .num_report_ids = 1,
+    .report_ids = {
+        0x0,
+    },
+    .in_report_lengths = {
+        sizeof(webhid_report_buffer),
+    },
+    .out_report_lengths = {
+        sizeof(webhid_out_report_buffer),
+    },
+};
+
+
 static const uint8_t keyboard_report_descriptor[] = {
     0x05, 0x01,       // Usage Page (Generic Desktop Ctrls)
     0x09, 0x06,       // Usage (Keyboard)

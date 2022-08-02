@@ -277,6 +277,7 @@ STATIC const mp_rom_map_elem_t usb_hid_device_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_MOUSE),                    MP_ROM_PTR(&usb_hid_device_mouse_obj) },
     { MP_ROM_QSTR(MP_QSTR_CONSUMER_CONTROL),         MP_ROM_PTR(&usb_hid_device_consumer_control_obj) },
     { MP_ROM_QSTR(MP_QSTR_FIDO),                     MP_ROM_PTR(&usb_hid_device_fido_obj) },
+    { MP_ROM_QSTR(MP_QSTR_WEBHID),                   MP_ROM_PTR(&usb_hid_device_webhid_obj) },
 };
 
 STATIC MP_DEFINE_CONST_DICT(usb_hid_device_locals_dict, usb_hid_device_locals_dict_table);
