@@ -35,26 +35,7 @@
 #include "supervisor/shared/tick.h"
 #include "tusb.h"
 
-static const uint8_t fido_report_descriptor[] = {
-    0x06, 0xf1, 0xd0,
-    0x09, 0x01,
-    0xA1, 0x01,       // Collection (Application)
-    0x85, 0x01,       //   Report ID (1)
-    0x09, 0x20,       //   USAGE (Input Report Data)
-    0x15, 0x00,       // LOGICAL_MINIMUM (0)
-    0x26, 0xff, 0x00, // LOGICAL_MAXIMUM (255)
-    0x75, 0x08,       // REPORT_SIZE (8)
-    0x95, 64,         //  REPORT_COUNT (64)
-    0x81, 0x02,       // INPUT (Data,Var,Abs)
-    0x09, 0x21,       // USAGE(Output Report Data)
-    0x15, 0x00,       //  LOGICAL_MINIMUM (0)
-    0x26, 0xff, 0x00, //  LOGICAL_MAXIMUM (255)
-    0x75, 0x08,       // REPORT_SIZE (8)
-    0x95, 64,         // REPORT_COUNT (64)
-    0x91, 0x02,       // OUTPUT (Data,Var,Abs)
-    0xc0              // END_COLLECTION
-};
-
+static const uint8_t fido_report_descriptor[] = { TUD_HID_REPORT_DESC_GENERIC_INOUT(64), HID_REPORT_ID(2) };
 static uint8_t fido_report_buffer[64];
 static uint8_t fido_out_report_buffer[64];
 
@@ -70,7 +51,7 @@ const usb_hid_device_obj_t usb_hid_device_fido_obj = {
     .usage = 0x01,
     .num_report_ids = 1,
     .report_ids = {
-        0x0,
+        0x2,
     },
     .in_report_lengths = {
         sizeof(fido_report_buffer),
@@ -81,25 +62,8 @@ const usb_hid_device_obj_t usb_hid_device_fido_obj = {
 };
 
 
-static const uint8_t webhid_report_descriptor[] = {
-    0x06, 0xff, 0xa0,
-    0x09, 0x01,
-    0xA1, 0x01,       // Collection (Application)
-    0x85, 0x01,       //   Report ID (1)
-    0x09, 0x20,       //   USAGE (Input Report Data)
-    0x15, 0x00,       // LOGICAL_MINIMUM (0)
-    0x26, 0xff, 0x00, // LOGICAL_MAXIMUM (255)
-    0x75, 0x08,       // REPORT_SIZE (8)
-    0x95, 64,         //  REPORT_COUNT (64)
-    0x81, 0x02,       // INPUT (Data,Var,Abs)
-    0x09, 0x21,       // USAGE(Output Report Data)
-    0x15, 0x00,       //  LOGICAL_MINIMUM (0)
-    0x26, 0xff, 0x00, //  LOGICAL_MAXIMUM (255)
-    0x75, 0x08,       // REPORT_SIZE (8)
-    0x95, 64,         // REPORT_COUNT (64)
-    0x91, 0x02,       // OUTPUT (Data,Var,Abs)
-    0xc0              // END_COLLECTION
-};
+
+static const uint8_t webhid_report_descriptor[] = { TUD_HID_REPORT_DESC_GENERIC_INOUT(64), HID_REPORT_ID(1) };
 
 static uint8_t webhid_report_buffer[64];
 static uint8_t webhid_out_report_buffer[64];
@@ -116,7 +80,7 @@ const usb_hid_device_obj_t usb_hid_device_webhid_obj = {
     .usage = 0x01,
     .num_report_ids = 1,
     .report_ids = {
-        0x0,
+        0x1,
     },
     .in_report_lengths = {
         sizeof(webhid_report_buffer),
@@ -125,7 +89,6 @@ const usb_hid_device_obj_t usb_hid_device_webhid_obj = {
         sizeof(webhid_out_report_buffer),
     },
 };
-
 
 static const uint8_t keyboard_report_descriptor[] = {
     0x05, 0x01,       // Usage Page (Generic Desktop Ctrls)
@@ -253,8 +216,6 @@ static const uint8_t consumer_control_report_descriptor[] = {
     0x81, 0x00,       //   Input (Data,Array,Abs,No Wrap,Linear,Preferred State,No Null Position)
     0xC0,             // End Collection
 };
-
-
 
 const usb_hid_device_obj_t usb_hid_device_consumer_control_obj = {
     .base = {
@@ -417,27 +378,22 @@ uint16_t tud_hid_get_report_cb(uint8_t itf, uint8_t report_id, hid_report_type_t
 void tud_hid_set_report_cb(uint8_t itf, uint8_t report_id, hid_report_type_t report_type, uint8_t const *buffer, uint16_t bufsize)
 {
     (void)itf;
-    if (report_type == HID_REPORT_TYPE_INVALID)
-    {
+    if (report_type == HID_REPORT_TYPE_INVALID) {
         report_id = buffer[0];
         buffer++;
         bufsize--;
-    }
-    else if (report_type != HID_REPORT_TYPE_OUTPUT && report_type != HID_REPORT_TYPE_FEATURE)
-    {
+    } else if (report_type != HID_REPORT_TYPE_OUTPUT && report_type != HID_REPORT_TYPE_FEATURE) {
         return;
     }
 
     usb_hid_device_obj_t *hid_device;
     size_t id_idx;
     // Find device with this report id, and get the report id index.
-    if (usb_hid_get_device_with_report_id(report_id, &hid_device, &id_idx))
-    {
+    if (usb_hid_get_device_with_report_id(report_id, &hid_device, &id_idx)) {
         // If a report of the correct size has been read, save it in the proper OUT report buffer.
         if (hid_device &&
             hid_device->out_report_buffers[id_idx] &&
-            hid_device->out_report_lengths[id_idx] >= bufsize)
-        {
+            hid_device->out_report_lengths[id_idx] >= bufsize) {
             memcpy(hid_device->out_report_buffers[id_idx], buffer, bufsize);
         }
     }
