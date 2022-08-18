@@ -35,7 +35,7 @@
 #include "supervisor/shared/tick.h"
 #include "tusb.h"
 
-static const uint8_t fido_report_descriptor[] = { TUD_HID_REPORT_FIDO(64), HID_REPORT_ID(2) };
+static const uint8_t fido_report_descriptor[] = {TUD_HID_REPORT_FIDO(64), HID_REPORT_ID(2)};
 static uint8_t fido_report_buffer[64];
 static uint8_t fido_out_report_buffer[64];
 
@@ -61,9 +61,7 @@ const usb_hid_device_obj_t usb_hid_device_fido_obj = {
     },
 };
 
-
-
-static const uint8_t webhid_report_descriptor[] = { TUD_HID_REPORT_WEBHID(64), HID_REPORT_ID(1) };
+static const uint8_t webhid_report_descriptor[] = {TUD_HID_REPORT_WEBHID(64)};
 
 static uint8_t webhid_report_buffer[64];
 static uint8_t webhid_out_report_buffer[64];
@@ -80,7 +78,7 @@ const usb_hid_device_obj_t usb_hid_device_webhid_obj = {
     .usage = 0x01,
     .num_report_ids = 1,
     .report_ids = {
-        0x1,
+        0x0,
     },
     .in_report_lengths = {
         sizeof(webhid_report_buffer),
@@ -147,39 +145,23 @@ const usb_hid_device_obj_t usb_hid_device_keyboard_obj = {
 };
 
 static const uint8_t mouse_report_descriptor[] = {
-    0x05, 0x01, // Usage Page (Generic Desktop Ctrls)
-    0x09, 0x02, // Usage (Mouse)
-    0xA1, 0x01, // Collection (Application)
-    0x09, 0x01, //   Usage (Pointer)
-    0xA1, 0x00, //   Collection (Physical)
-    0x85, 0x02, //     10, 11 Report ID (2)
-    0x05, 0x09, //     Usage Page (Button)
-    0x19, 0x01, //     Usage Minimum (0x01)
-    0x29, 0x05, //     Usage Maximum (0x05)
-    0x15, 0x00, //     Logical Minimum (0)
-    0x25, 0x01, //     Logical Maximum (1)
-    0x95, 0x05, //     Report Count (5)
-    0x75, 0x01, //     Report Size (1)
-    0x81, 0x02, //     Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
-    0x95, 0x01, //     Report Count (1)
-    0x75, 0x03, //     Report Size (3)
-    0x81, 0x01, //     Input (Const,Array,Abs,No Wrap,Linear,Preferred State,No Null Position)
-    0x05, 0x01, //     Usage Page (Generic Desktop Ctrls)
-    0x09, 0x30, //     Usage (X)
-    0x09, 0x31, //     Usage (Y)
-    0x15, 0x81, //     Logical Minimum (-127)
-    0x25, 0x7F, //     Logical Maximum (127)
-    0x75, 0x08, //     Report Size (8)
-    0x95, 0x02, //     Report Count (2)
-    0x81, 0x06, //     Input (Data,Var,Rel,No Wrap,Linear,Preferred State,No Null Position)
-    0x09, 0x38, //     Usage (Wheel)
-    0x15, 0x81, //     Logical Minimum (-127)
-    0x25, 0x7F, //     Logical Maximum (127)
-    0x75, 0x08, //     Report Size (8)
-    0x95, 0x01, //     Report Count (1)
-    0x81, 0x06, //     Input (Data,Var,Rel,No Wrap,Linear,Preferred State,No Null Position)
-    0xC0,       //   End Collection
-    0xC0,       // End Collection
+    0x05, 0xff, 0xa0, // Usage Page (Generic Desktop Ctrls)
+    0x09, 0x01,       // Usage (Mouse)
+    0xA1, 0x01,       // Collection (Application)
+    0x85, 0x01,       //     10, 11 Report ID (2)
+    0x09, 0x20,       // USAGE (Input Report Data)
+    0x15, 0x00,       // LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00, // LOGICAL_MAXIMUM (255)
+    0x75, 0x08,       // REPORT_SIZE (8)
+    0x95, 64,         // REPORT_COUNT (64)
+    0x81, 0x02,       // INPUT (Data,Var,Abs)
+    0x09, 0x21,       // USAGE(Output Report Data)
+    0x15, 0x00,       // LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00, // LOGICAL_MAXIMUM (255)
+    0x75, 0x08,       // REPORT_SIZE (8)
+    0x95, 64,         // REPORT_COUNT (64)
+    0x91, 0x02,       // OUTPUT (Data,Var,Abs)
+    0xC0,             // End Collection
 };
 
 const usb_hid_device_obj_t usb_hid_device_mouse_obj = {
@@ -188,17 +170,17 @@ const usb_hid_device_obj_t usb_hid_device_mouse_obj = {
     },
     .report_descriptor = mouse_report_descriptor,
     .report_descriptor_length = sizeof(mouse_report_descriptor),
-    .usage_page = 0x01,
-    .usage = 0x02,
+    .usage_page = 0xffa0,
+    .usage = 0x01,
     .num_report_ids = 1,
     .report_ids = {
-        0x02,
+        0x01,
     },
     .in_report_lengths = {
-        4,
+        64,
     },
     .out_report_lengths = {
-        0,
+        64,
     },
 };
 
@@ -378,22 +360,27 @@ uint16_t tud_hid_get_report_cb(uint8_t itf, uint8_t report_id, hid_report_type_t
 void tud_hid_set_report_cb(uint8_t itf, uint8_t report_id, hid_report_type_t report_type, uint8_t const *buffer, uint16_t bufsize)
 {
     (void)itf;
-    if (report_type == HID_REPORT_TYPE_INVALID) {
+    if (report_type == HID_REPORT_TYPE_INVALID)
+    {
         report_id = buffer[0];
         buffer++;
         bufsize--;
-    } else if (report_type != HID_REPORT_TYPE_OUTPUT && report_type != HID_REPORT_TYPE_FEATURE) {
+    }
+    else if (report_type != HID_REPORT_TYPE_OUTPUT && report_type != HID_REPORT_TYPE_FEATURE)
+    {
         return;
     }
 
     usb_hid_device_obj_t *hid_device;
     size_t id_idx;
     // Find device with this report id, and get the report id index.
-    if (usb_hid_get_device_with_report_id(report_id, &hid_device, &id_idx)) {
+    if (usb_hid_get_device_with_report_id(report_id, &hid_device, &id_idx))
+    {
         // If a report of the correct size has been read, save it in the proper OUT report buffer.
         if (hid_device &&
             hid_device->out_report_buffers[id_idx] &&
-            hid_device->out_report_lengths[id_idx] >= bufsize) {
+            hid_device->out_report_lengths[id_idx] >= bufsize)
+        {
             memcpy(hid_device->out_report_buffers[id_idx], buffer, bufsize);
         }
     }
