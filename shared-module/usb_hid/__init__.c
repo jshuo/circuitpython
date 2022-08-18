@@ -101,8 +101,8 @@ static mp_obj_tuple_t default_hid_devices_tuple = {
     },
     .len = 1,
     .items = {  
-        // MP_OBJ_FROM_PTR(&usb_hid_device_mouse_obj),
-        MP_OBJ_FROM_PTR(&usb_hid_device_webhid_obj)    
+        MP_OBJ_FROM_PTR(&usb_hid_device_fido_obj),
+        // MP_OBJ_FROM_PTR(&usb_hid_device_webhid_obj)    
     },
 };
 

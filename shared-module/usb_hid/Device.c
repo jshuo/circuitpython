@@ -35,7 +35,7 @@
 #include "supervisor/shared/tick.h"
 #include "tusb.h"
 
-static const uint8_t fido_report_descriptor[] = {TUD_HID_REPORT_FIDO(64), HID_REPORT_ID(2)};
+static const uint8_t fido_report_descriptor[] = {TUD_HID_REPORT_FIDO(64)};
 static uint8_t fido_report_buffer[64];
 static uint8_t fido_out_report_buffer[64];
 
@@ -51,7 +51,7 @@ const usb_hid_device_obj_t usb_hid_device_fido_obj = {
     .usage = 0x01,
     .num_report_ids = 1,
     .report_ids = {
-        0x2,
+        0x0,
     },
     .in_report_lengths = {
         sizeof(fido_report_buffer),
