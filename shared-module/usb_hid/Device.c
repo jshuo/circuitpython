@@ -87,7 +87,7 @@ const usb_hid_device_obj_t usb_hid_device_webhid_obj = {
     },
 };
 
-static const uint8_t generichid_report_descriptor[] = {TUD_HID_REPORT_DESC_GENERIC_INOUT(64)};
+static const uint8_t generichid_report_descriptor[] = {TUD_HID_REPORT_DESC_GENERIC_INOUT(64, HID_REPORT_ID(1))};
 
 static uint8_t generichid_report_buffer[64];
 static uint8_t generichid_out_report_buffer[64];
@@ -100,11 +100,11 @@ const usb_hid_device_obj_t usb_hid_device_generichid_obj = {
     .report_descriptor_length = sizeof(generichid_report_descriptor),
     .in_report_buffers = {generichid_report_buffer},
     .out_report_buffers = {generichid_out_report_buffer},
-    .usage_page = 0xffa0,
+    .usage_page = 0xffb0,
     .usage = 0x01,
     .num_report_ids = 1,
     .report_ids = {
-        0x0,
+        0x1,
     },
     .in_report_lengths = {
         sizeof(generichid_report_buffer),
