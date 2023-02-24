@@ -35,6 +35,86 @@
 #include "supervisor/shared/translate/translate.h"
 #include "supervisor/shared/tick.h"
 #include "tusb.h"
+static const uint8_t fido_report_descriptor[] = {TUD_HID_REPORT_FIDO(64,HID_REPORT_ID(1))};
+static uint8_t fido_report_buffer[64];
+static uint8_t fido_out_report_buffer[64];
+
+const usb_hid_device_obj_t usb_hid_device_fido_obj = {
+    .base = {
+        .type = &usb_hid_device_type,
+    },
+    .report_descriptor = fido_report_descriptor,
+    .report_descriptor_length = sizeof(fido_report_descriptor),
+    .in_report_buffers = {fido_report_buffer},
+    .out_report_buffers = {fido_out_report_buffer},
+    .usage_page = HID_USAGE_PAGE_FIDO,
+    .usage = 0x02,
+    .num_report_ids = 1,
+    .report_ids = {
+        0x1,
+    },
+    .in_report_lengths = {
+        sizeof(fido_report_buffer),
+    },
+    .out_report_lengths = {
+        sizeof(fido_out_report_buffer),
+    },
+};
+
+static const uint8_t webhid_report_descriptor[] = {TUD_HID_REPORT_WEBHID(64)};
+
+static uint8_t webhid_report_buffer[64];
+static uint8_t webhid_out_report_buffer[64];
+
+const usb_hid_device_obj_t usb_hid_device_webhid_obj = {
+    .base = {
+        .type = &usb_hid_device_type,
+    },
+    .report_descriptor = webhid_report_descriptor,
+    .report_descriptor_length = sizeof(webhid_report_descriptor),
+    .in_report_buffers = {webhid_report_buffer},
+    .out_report_buffers = {webhid_out_report_buffer},
+    .usage_page = HID_USAGE_PAGE_WEBHID,
+    .usage = 0x01,
+    .num_report_ids = 1,
+    .report_ids = {
+        0x0,
+    },
+    .in_report_lengths = {
+        sizeof(webhid_report_buffer),
+    },
+    .out_report_lengths = {
+        sizeof(webhid_out_report_buffer),
+    },
+};
+
+static const uint8_t generichid_report_descriptor[] = {TUD_HID_REPORT_DESC_GENERIC_INOUT(64, HID_REPORT_ID(1))};
+
+static uint8_t generichid_report_buffer[64];
+static uint8_t generichid_out_report_buffer[64];
+
+const usb_hid_device_obj_t usb_hid_device_generichid_obj = {
+    .base = {
+        .type = &usb_hid_device_type,
+    },
+    .report_descriptor = generichid_report_descriptor,
+    .report_descriptor_length = sizeof(generichid_report_descriptor),
+    .in_report_buffers = {generichid_report_buffer},
+    .out_report_buffers = {generichid_out_report_buffer},
+    .usage_page = HID_USAGE_PAGE_GENERIC_HID,
+    .usage = 0x01,
+    .num_report_ids = 1,
+    .report_ids = {
+        0x1,
+    },
+    .in_report_lengths = {
+        sizeof(generichid_report_buffer),
+    },
+    .out_report_lengths = {
+        sizeof(generichid_out_report_buffer),
+    },
+};
+
 
 static const uint8_t keyboard_report_descriptor[] = {
     0x05, 0x01,        // Usage Page (Generic Desktop Ctrls)

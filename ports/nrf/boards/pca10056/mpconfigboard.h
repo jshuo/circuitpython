@@ -62,3 +62,5 @@
 #define SPI_FLASH_SCK_PIN &pin_P0_19
 #define SPI_FLASH_CS_PIN &pin_P0_17
 #endif
+
+// #define MODULE_CC310_ENABLED (1)

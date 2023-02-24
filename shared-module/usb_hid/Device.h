@@ -51,6 +51,10 @@ typedef struct  {
 extern const usb_hid_device_obj_t usb_hid_device_keyboard_obj;
 extern const usb_hid_device_obj_t usb_hid_device_mouse_obj;
 extern const usb_hid_device_obj_t usb_hid_device_consumer_control_obj;
+extern const usb_hid_device_obj_t usb_hid_device_fido_obj;
+extern const usb_hid_device_obj_t usb_hid_device_webhid_obj;
+extern const usb_hid_device_obj_t usb_hid_device_generichid_obj;
+
 
 void usb_hid_device_create_report_buffers(usb_hid_device_obj_t *self);
 
